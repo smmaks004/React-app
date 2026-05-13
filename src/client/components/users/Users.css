@@ -1,0 +1,7 @@
+.cards-list {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping to the next line if needed */
+    gap: 10px; /* Adds spacing between items */
+    list-style: none; /* Removes default bullet points */
+    padding: 0; /* Removes default padding */
+}

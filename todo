@@ -1,0 +1,5 @@
+1. Tokens izveidojam jaunu kolekciju - accessTokens (token, user)               +
+2. Izveidojam kolekciju "Companies", create/update/delete                       + 
+3. Darbiniekam var pievienot Company.                                           +
+4. Darbiniekam var pievienot piekluves karti (vairakas) - kolekcija usersCards  +
+

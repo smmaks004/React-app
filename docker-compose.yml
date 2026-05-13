@@ -1,0 +1,70 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: my-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    command: node src/server/index.js
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=${MONGO_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    build: .
+      # context: ./server
+      # dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+
+  frontend:
+    command: npm run dev
+    build: .
+      # context: .
+      # dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+    # networks:
+    #   - front-tier
+    #   - back-tier
+    # configs:
+    #   - httpd-config
+    # secrets:
+    #   - server-certificate
+
+  
+volumes:
+  mongo-data:
+
+
+# configs:
+#   httpd-config:
+#     external: true
+
+# secrets:
+#   server-certificate:
+#     external: true
+
+# networks:
+#   # The presence of these objects is sufficient to define them
+#   front-tier: {}
+#   back-tier: {}
