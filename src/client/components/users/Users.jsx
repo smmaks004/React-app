@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Header from '../Header';
 import { useNavigate } from 'react-router-dom';
 import CreateUser from './CreateUser';
+// import { unwrapListResponse } from '../../utils/response';
+
 
 import './Users.css';
 
@@ -15,11 +17,12 @@ const Users = () => {
     const [cards, setCards] = useState([]); // State for user's cards
     const [newCardName, setNewCardName] = useState(''); // State for new card input
 
+    // Fetchs
     const fetchUsers = async () => {
         try {
             const res = await fetch('/api/users');
             if (!res.ok) throw new Error('Failed to fetch users');
-            const data = await res.json();
+            const { data, message, status } = await res.json();
             setUsers(data);
         } catch (err) {
             setError(err.message);
@@ -28,10 +31,9 @@ const Users = () => {
 
     const fetchCompanies = async () => {
         try {
-            const res = await fetch('/api/companies/companies');
+            const res = await fetch('/api/companies/companies-names');
             if (!res.ok) throw new Error('Failed to fetch companies');
-            const data = await res.json();
-
+            const { data } = await res.json();
             setCompanies(data);
         } catch (err) {
             setError(err.message);
@@ -42,7 +44,7 @@ const Users = () => {
         try {
             const res = await fetch(`/api/cards/user/${userId}`);
             if (!res.ok) throw new Error('Failed to fetch cards');
-            const data = await res.json();
+            const { data } = await res.json();
             setCards(data);
         } catch (err) {
             console.error('Error fetching cards:', err);
@@ -111,7 +113,9 @@ const Users = () => {
                 },
                 body: JSON.stringify(updatedUser),
             });
+
             if (response.ok) {
+            // if (response.status === "success") {
                 fetchUsers();
                 handleModalClose();
             } else {
@@ -165,6 +169,7 @@ const Users = () => {
                 </div>
             )}
 
+            {/* Modal part for editing user */}
             {showModal && (
                 <div className="modal">
                     <h3>Edit User</h3>

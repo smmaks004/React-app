@@ -1,5 +1,5 @@
-1. Tokens izveidojam jaunu kolekciju - accessTokens (token, user)               +
-2. Izveidojam kolekciju "Companies", create/update/delete                       + 
-3. Darbiniekam var pievienot Company.                                           +
-4. Darbiniekam var pievienot piekluves karti (vairakas) - kolekcija usersCards  +
-
+1. Parveidot funkcijas no () uz ({}). (Objektu destruktesana)
+2. Cards view skata atspogulot lietotaja informaciju (email, name, surname).
+3. Pie cards vajag iespeju pievienot cardHex.
+4. Jauna kolekcija - Zones. (name, workStart, workEnd (HH:mm), company) 
+5. Lietotajam japievieno vairakas zonas, pie kuram lietotajs var pieklut. (usersZones)

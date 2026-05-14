@@ -2,21 +2,23 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
+
 const handleLogout = async () => {
-		try {
-			const response = await fetch('/api/auth/logout', {
-				method: 'POST',
-				credentials: 'include',
-			});
-			const data = await response.json();
-            
-			navigate('/auth/login', { replace: true });
-		} catch (error) {}
-	};
+
+    try {
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include',
+        });
+        const data = await response.json();
+        
+        navigate('/auth/login', { replace: true });
+    } catch (error) {}
+};
 
 
 const Header = ({ onTabChange }) => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     return (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>

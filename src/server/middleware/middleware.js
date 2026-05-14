@@ -1,6 +1,10 @@
 import jwt from 'jsonwebtoken';
+
 import { User } from '../models/user.js';
 import { Token } from '../models/token.js';
+
+import UserService from '../services/UsersService.js';
+import TokenService from '../services/TokensService.js';
 
 export const authenticateToken = async (req, res, next) => {
   const token = req.cookies?.token;
@@ -28,14 +32,20 @@ export const authenticateToken = async (req, res, next) => {
       }
     */
 
-    const dbUser = await User.findOne({ email: user.email });
+    // const dbUser = await User.findOne({ email: user.email });
+    // if (!dbUser) {
+    //   return res.status(401).json({ message: 'Wrong person' });
+    // }
+    const dbUser = await UserService.getUserByEmail(user.email); // 
     if (!dbUser) {
       return res.status(401).json({ message: 'Wrong person' });
     }
-    const dbToken = await Token.findOne({ userId: dbUser._id });
+
+    const dbToken = await TokenService.getTokenByUserId( dbUser._id ); // 
     if (!dbToken) {
       return res.status(401).json({ message: 'Token not found in database' });
     }
+    
     // Compare token
     if (dbToken.token !== token) {
       return res.status(401).json({ message: 'Token is not valid **' });

@@ -16,7 +16,7 @@ const CreateCompany = ({ onCompanyCreated }) => {
                 body: JSON.stringify({ name, address, industry }),
             });
             if (response.ok) {
-                const data = await response.json();
+                const { data } = await response.json();
                 onCompanyCreated(); // Notify parent to refresh the list
                 setName('');
                 setAddress('');

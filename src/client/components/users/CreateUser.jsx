@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// import { unwrapListResponse } from '../../utils/response';
 
 const CreateUser = ({ onUserCreated }) => {
   const [name, setName] = useState('');
@@ -16,9 +17,9 @@ const CreateUser = ({ onUserCreated }) => {
   useEffect(() => {
     const fetchCompanies = async () => {
       try {
-        const res = await fetch('/api/companies/companies');
+        const res = await fetch('/api/companies/companies-names');
         if (!res.ok) throw new Error('Failed to fetch companies');
-        const data = await res.json();
+        const { data } = await res.json();
         setCompanies(data);
       } catch (err) {
         console.error('Error fetching companies:', err);
@@ -38,7 +39,9 @@ const CreateUser = ({ onUserCreated }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, surname, email, role, password, company: selectedCompany })
       });
-      const data = await res.json();
+
+      const { data } = await res.json(); //
+      
       if (res.ok) {
         setMessage('User created!');
 

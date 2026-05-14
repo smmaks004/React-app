@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../Header';
 import { useNavigate } from 'react-router-dom';
+
 import CreateCompany from './CreateCompany';
 
 const Companies = () => {
@@ -13,7 +14,7 @@ const Companies = () => {
         try {
             const response = await fetch('/api/companies');
             if (response.ok) {
-                const data = await response.json();
+                const { data, status, message } = await response.json();
                 setCompanies(data);
             } else {
                 setError('Failed to fetch companies');

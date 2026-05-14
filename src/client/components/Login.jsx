@@ -30,9 +30,9 @@ function Login() {
 				const res = await fetch('/api/auth/status', {
 					credentials: 'include',
 				});
-				const data = await res.json();
-				setLoggedIn(data.loggedIn);
-				setUser(data.user || null);
+				const statusData = await res.json();
+				setLoggedIn(statusData.loggedIn);
+				setUser(statusData.user || null);
 			} catch (err) {
 				setLoggedIn(false);
 				setUser(null);
@@ -52,16 +52,18 @@ function Login() {
 				credentials: 'include',
 				body: JSON.stringify({ email, password }),
 			});
-			const data = await response.json();
-			setMessage(data.message || 'Login request sent!');
+			const responseData = await response.json();
+			setMessage('Login request sent!');
+			// setMessage(responseData.message || 'Login request sent!');
 			if (response.ok) {
 				setLoggedIn(true);
-				setUser(data.user || null);
+				setUser(responseData.data?.user || null);
                 
 				// Store token in localStorage for protected routes
-				if (data.token) {
-					localStorage.setItem('token', data.token);
+				if (responseData.data?.token) {
+					localStorage.setItem('token', responseData.data.token);
 				}
+
 				navigate('/');
 			} else {
 				setLoggedIn(false);
@@ -93,7 +95,7 @@ function Login() {
 				},
 				body: JSON.stringify({ name: regName, surname: regSurname, email: regEmail, password: regPassword }),
 			});
-			const data = await response.json();
+			const responseData = await response.json();
 			if (response.ok) {
 				setMessage('Registration successful! You can now log in.');
 				// Optionally, switch to login form
@@ -105,7 +107,7 @@ function Login() {
 				setRegPassword('');
 				setRegRepeatPassword('');
 			} else {
-				setMessage(data.message || 'Registration failed');
+				setMessage(responseData.message || 'Registration failed');
 			}
 		} catch (error) {
 			setMessage('Error sending registration request');

@@ -4,20 +4,21 @@ import { useNavigate } from 'react-router-dom';
 
 import CreateUser from './users/CreateUser';
 
+
 import Users from './users/Users';
 import Companies from './company/Companies';
 
 
 const MainPage = () => {
-const [activeTab, setActiveTab] = useState('userTable');
+  const [activeTab, setActiveTab] = useState('userTable');
 
-const handleTabChange = (tab) => {
-  setActiveTab(tab);
-};
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
 
 
 
-return (
+  return (
         <div>
           <Header onTabChange={handleTabChange} />
           {activeTab === 'userTable' && (
