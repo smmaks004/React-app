@@ -53,8 +53,10 @@ function Login() {
 				body: JSON.stringify({ email, password }),
 			});
 			const responseData = await response.json();
-			setMessage('Login request sent!');
-			// setMessage(responseData.message || 'Login request sent!');
+
+			// setMessage('Login request sent!');
+			setMessage(responseData.message || 'Login request sent!');
+			
 			if (response.ok) {
 				setLoggedIn(true);
 				setUser(responseData.data?.user || null);

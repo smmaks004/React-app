@@ -7,6 +7,7 @@ import publicUsersRouter from './public-users.js';
 import companiesRouter from './companies.js';
 import cardsRouter from './cards.js';
 import zonesRouter from './zones.js';
+import picturesRouter from './pictures.js';
 
 const router = express.Router();
 
@@ -20,6 +21,7 @@ router.use('/users', authenticateToken, usersRouter);
 router.use('/companies', authenticateToken, companiesRouter); // was without authentication, now protected
 router.use('/cards', authenticateToken, cardsRouter);
 router.use('/zones', authenticateToken, zonesRouter);
+router.use('/pictures', authenticateToken, picturesRouter);
 
 
 export default router;

@@ -128,6 +128,38 @@ router.get('/status', authenticateToken, (req, res) => {
     res.json({ loggedIn: true, user: req.user });
 });
 
+// Route to get current authenticated user information
+router.get('/me', authenticateToken, async (req, res) => {
+    try {
+        const dbUser = await UsersService.getUserByEmail({ email: req.user.email });
+        if (!dbUser) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'User not found',
+                data: null,
+            });
+        }
+
+        return res.json({
+            status: 'success',
+            message: 'Authenticated user',
+            data: {
+                id: dbUser._id,
+                name: dbUser.name,
+                surname: dbUser.surname,
+                email: dbUser.email,
+            },
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            status: 'error',
+            message: 'Failed to get current user: ' + err.message,
+            data: null,
+        });
+    }
+});
+
 // Logout route
 router.post('/logout', (req, res) => {
     res.clearCookie('token');
