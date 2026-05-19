@@ -1,0 +1,7 @@
+.cards-list {
+    display: flex;
+    flex-direction: column; /* Arrange items vertically */
+    gap: 10px; /* Adds spacing between items */
+    list-style: none; /* Removes default bullet points */
+    padding: 0; /* Removes default padding */
+}

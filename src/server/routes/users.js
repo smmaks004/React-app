@@ -48,7 +48,7 @@ router.post('/create', async (req, res) => {
 
 	try {
 		// const existing = await User.findOne({ email });
-		const existing = await UsersService.getUserByEmail(email);
+		const existing = await UsersService.getUserByEmail({ email });
 		if (existing) {
 			return res.status(409).json({ message: 'User already exists' });
 		}
@@ -56,7 +56,7 @@ router.post('/create', async (req, res) => {
 		// const user = new User({ name, surname, email, role, password: hashedPassword, company });
 		// await user.save();
 
-		const user = await UsersService.createUser(name, surname, email, role, hashedPassword, company);
+		const user = await UsersService.createUser({ name, surname, email, role, password: hashedPassword, company });
 		
 
 		const response = {
@@ -94,7 +94,7 @@ router.put('/update/:id', async (req, res) => {
 		// 	{ name, surname, email, company },
 		// 	{ new: true }
 		// );
-		const updatedUser = await UsersService.updateUserById(id, name, surname, email, company);
+		const updatedUser = await UsersService.updateUserById({ id, name, surname, email, company });
 		if (!updatedUser) {
 			return res.status(404).json({ message: 'User not found' });
 		}
@@ -125,7 +125,7 @@ router.put('/update/:id', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const deletedUser = await UsersService.deleteUserById(id);
+		const deletedUser = await UsersService.deleteUserById({ id });
         if (!deletedUser) {
             return res.status(404).json({ message: 'User not found' });
         }

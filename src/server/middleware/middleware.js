@@ -36,12 +36,12 @@ export const authenticateToken = async (req, res, next) => {
     // if (!dbUser) {
     //   return res.status(401).json({ message: 'Wrong person' });
     // }
-    const dbUser = await UserService.getUserByEmail(user.email); // 
+    const dbUser = await UserService.getUserByEmail({ email: user.email }); // 
     if (!dbUser) {
       return res.status(401).json({ message: 'Wrong person' });
     }
 
-    const dbToken = await TokenService.getTokenByUserId( dbUser._id ); // 
+    const dbToken = await TokenService.getTokenByUserId({ userId: dbUser._id }); // 
     if (!dbToken) {
       return res.status(401).json({ message: 'Token not found in database' });
     }

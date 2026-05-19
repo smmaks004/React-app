@@ -8,14 +8,14 @@ class UsersService {
         return users;
     }
 
-    static async getUserByEmail(email) {
+    static async getUserByEmail({ email }) {
         const user = await User.findOne({ email });
 
         return user;
     }
 
     // UPDATE
-    static async updateUserById( id, name, surname, email, company ) {
+    static async updateUserById({ id, name, surname, email, company }) {
         const user = await User.findByIdAndUpdate(
             id,
             { name, surname, email, company },
@@ -26,7 +26,7 @@ class UsersService {
     }
 
     // CREATE
-    static async createUser( name, surname, email, role, password, company ) {
+    static async createUser({ name, surname, email, role, password, company }) {
         const user = new User({ name, surname, email, role, password, company });
         await user.save();
 
@@ -34,7 +34,7 @@ class UsersService {
     }
 
     // DELETE
-    static async deleteUserById(id) {
+    static async deleteUserById({ id }) {
         const user = await User.findByIdAndDelete({ _id: id });
 
         return user;

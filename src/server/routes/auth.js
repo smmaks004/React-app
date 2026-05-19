@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
     }
     try {
         // const user = await User.findOne({ email });
-        const user = await UsersService.getUserByEmail(email);
+        const user = await UsersService.getUserByEmail({ email });
         if (!user) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
@@ -48,7 +48,7 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign({ id: user._id, email: user.email, name: user.name }, process.env.JWT_SECRET, { expiresIn: '1h' });
         
-        await TokenService.updateTokenByUserId(user._id, token);
+        await TokenService.updateTokenByUserId({ userId: user._id, token });
         
         res.cookie('token', token, { httpOnly: true, sameSite: 'lax', secure: false });
         
@@ -88,14 +88,14 @@ router.post('/registration', async (req, res) => {
     }
     
     try {
-        const existing = await UsersService.getUserByEmail(email);
+        const existing = await UsersService.getUserByEmail({ email });
         if (existing) {
             return res.status(409).json({ message: 'User already exists' });
         }
         
         const hashedPassword = await bcrypt.hash(password, 10);
         // const user = new User({ name, surname, email, role, password: hashedPassword, company });
-        const user = await UsersService.createUser( name, surname, email, role, hashedPassword, company );
+        const user = await UsersService.createUser({ name, surname, email, role, password: hashedPassword, company });
 
 
         // await user.save();

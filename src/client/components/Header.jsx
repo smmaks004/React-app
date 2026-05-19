@@ -25,13 +25,25 @@ const Header = ({ onTabChange }) => {
             <button 
                 onClick={() => onTabChange && onTabChange('userTable')}
                 style={{ padding: '8px 16px' }}>
-                User Creation
+                Users Page
             </button>
 
             <button 
                 onClick={() => onTabChange && onTabChange('companyTable')}
                 style={{ padding: '8px 16px' }}>
-                Company Creation
+                Companies Page
+            </button>
+
+            <button 
+                onClick={() => onTabChange && onTabChange('cardTable')}
+                style={{ padding: '8px 16px' }}>
+                Cards Page
+            </button>
+
+            <button 
+                onClick={() => onTabChange && onTabChange('ZoneTable')}
+                style={{ padding: '8px 16px' }}>
+                Zones Page
             </button>
 
             <button onClick={handleLogout} style={{ padding: '8px 16px' }}>Log out</button>

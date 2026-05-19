@@ -95,7 +95,7 @@ const CreateUser = ({ onUserCreated }) => {
       <select
         value={selectedCompany}
         onChange={e => setSelectedCompany(e.target.value)}
-        required
+        // required
       >
         <option value="">Select a company</option>
         {companies.map(company => (

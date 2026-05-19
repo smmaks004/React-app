@@ -16,7 +16,7 @@ class CompaniesService {
     }
 
     // CREATE
-    static async createCompany( name, address, industry ) {
+    static async createCompany({ name, address, industry }) {
         const company = new Company({ name, address, industry });
         await company.save();
 
@@ -24,7 +24,7 @@ class CompaniesService {
     }
 
     // UPDATE
-    static async updateCompanyById( id, name, address, industry ) {
+    static async updateCompanyById({ id, name, address, industry }) {
         const company = await Company.findByIdAndUpdate(
             id,
             { name, address, industry },
@@ -35,7 +35,7 @@ class CompaniesService {
     }
 
     // DELETE
-    static async deleteCompanyById(id) {
+    static async deleteCompanyById({ id }) {
         const company = await Company.findByIdAndDelete({ _id: id });
         
         return company;

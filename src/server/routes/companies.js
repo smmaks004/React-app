@@ -90,7 +90,7 @@ router.post('/create', async (req, res) => {
     
     try {
         // const company = new Company({ name, address, industry });
-        const company = await CompaniesService.createCompany( name, address, industry );
+        const company = await CompaniesService.createCompany({ name, address, industry });
         const response = {
             status: "success",
             message: "Company created",
@@ -115,7 +115,7 @@ router.put('/update/:id', async (req, res) => {
     const { id } = req.params;
     const { name, address, industry } = req.body;
     try {
-        const updatedCompany = await CompaniesService.updateCompanyById( id, name, address, industry );
+        const updatedCompany = await CompaniesService.updateCompanyById({ id, name, address, industry });
         // if (!updatedCompany) {
         //     return res.status(404).json({ message: 'Company not found' });
         // }
@@ -142,7 +142,7 @@ router.put('/update/:id', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const deletedCompany = await CompaniesService.deleteCompanyById(id);
+        const deletedCompany = await CompaniesService.deleteCompanyById({ id });
         if (!deletedCompany) {
             return res.status(404).json({ message: 'Company not found' });
         }

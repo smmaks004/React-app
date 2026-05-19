@@ -3,15 +3,37 @@ import mongoose from 'mongoose';
 
 
 import CardsServices from '../services/CardsService.js';
+import UsersServices from '../services/UsersService.js';
+
 // import { Card } from '../models/card.js';
 
 
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+    try {
+        const allCards = await CardsServices.getAllCards();
+        const response = {
+            status: "success",
+            message: "All cards with users info",
+            data: allCards,
+        }
+
+        console.log(response);
+        res.json(response);
+    }
+    catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+
+});
+
+
+
 // Create a new card for a user
 router.post('/create', async (req, res) => {
-    const { name, userId } = req.body;
+    const { name, userId , cardHex} = req.body;
 
     if (!name || !userId) {
         return res.status(400).json({ message: 'Card name and userId are required' });
@@ -20,7 +42,7 @@ router.post('/create', async (req, res) => {
     try {
         // const card = new Card({ name, userId });
         // await card.save();
-        const card = await CardsServices.createCard( name, userId );
+        const card = await CardsServices.createCard({ name, userId, cardHex });
         const response = {
             status: "success",
             message: "Card created",
@@ -46,7 +68,7 @@ router.get('/user/:userId', async (req, res) => {
 
     try {
         // const cards = await Card.find({ userId });
-        const cards = await CardsServices.getAllCards( userId );
+        const cards = await CardsServices.getAllCardsByUserId({ userId });
         const response = {
             status: "success",
             message: "User's cards",
