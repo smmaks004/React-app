@@ -8,19 +8,19 @@ services:
       - mongo-data:/data/db
 
   backend:
-    command: node src/server/index.js
+    command: node index.js
     depends_on:
       - mongodb
     environment:
       - MONGO_URL=${MONGO_URL}
       - JWT_SECRET=${JWT_SECRET}
-    build: .
-      # context: ./server
-      # dockerfile: Dockerfile
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "5001:5001"
     volumes:
-      - .:/app
+      - ./server:/app
       - /app/node_modules
     deploy:
       resources:
@@ -30,13 +30,15 @@ services:
 
   frontend:
     command: npm run dev
-    build: .
-      # context: .
-      # dockerfile: Dockerfile
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    environment:
+      - VITE_API_TARGET=http://backend:5001
     ports:
-      - "5173:5173"
+      - "5174:5174"
     volumes:
-      - .:/app
+      - ./client:/app
       - /app/node_modules
     deploy:
       resources:

@@ -1,5 +1,0 @@
-1. Parveidot funkcijas no () uz ({}). (Objektu destruktesana)                           +
-2. Cards view skata atspogulot lietotaja informaciju (email, name, surname).            +
-3. Pie cards vajag iespeju pievienot cardHex.                                           +
-4. Jauna kolekcija - Zones. (name, workStart, workEnd (HH:mm), company)                 +
-5. Lietotajam japievieno vairakas zonas, pie kuram lietotajs var pieklut. (usersZones)  +
