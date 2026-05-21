@@ -1,0 +1,12 @@
+Frontend:
+Pie katra darbinieka jābūt opcijai "Skenēt kartīti"
+Nospiežot šo pogu backend izveidojas komanda, ko sūtit uz kontrolieri (actionId = 201).
+
+Kad kartīte ir noskanēta, saglabāt šo informāciju kolekcijā "TemporaryUsersCards", un atrādīt frontend, ka noskanēšana ir veiksmīga.
+Kad šī kartīte ir veiksmīgi noskanēta, jābūt pogai "Pievienot karti darbiniekam", kas backend izveidos komandu kontrolierim (actionId 1) 
+
+
+
+Uz keepalive:
+Ja nav komandas ko sūtīt, tad atbildam ar - res.send('ack=1');
+Ja ir komandas ko sūtīt, tad uz keepalive jaatbild ar res.send('cmd=${commandString}');

@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
 
 // Create a new card for a user
 router.post('/create', async (req, res) => {
-    const { name, userId , cardHex} = req.body;
+    const { name, userId , cardHex, type} = req.body;
 
     if (!name || !userId) {
         return res.status(400).json({ message: 'Card name and userId are required' });
@@ -42,7 +42,7 @@ router.post('/create', async (req, res) => {
     try {
         // const card = new Card({ name, userId });
         // await card.save();
-        const card = await CardsServices.createCard({ name, userId, cardHex });
+        const card = await CardsServices.createCard({ name, userId, cardHex, type });
         const response = {
             status: "success",
             message: "Card created",

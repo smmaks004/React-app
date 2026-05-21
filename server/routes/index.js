@@ -24,4 +24,5 @@ router.use('/zones', authenticateToken, zonesRouter);
 router.use('/pictures', authenticateToken, picturesRouter);
 
 
+
 export default router;

@@ -14,11 +14,15 @@ services:
     environment:
       - MONGO_URL=${MONGO_URL}
       - JWT_SECRET=${JWT_SECRET}
+      - PORT=${BACKEND_PORT}
+      - CORS_ORIGIN=${CORS_ORIGIN}
     build: 
       context: ./server
       dockerfile: Dockerfile
+      args:
+        BACKEND_PORT: ${BACKEND_PORT}
     ports:
-      - "5001:5001"
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     volumes:
       - ./server:/app
       - /app/node_modules
@@ -33,10 +37,13 @@ services:
     build: 
       context: ./client
       dockerfile: Dockerfile
+      args:
+        FRONTEND_PORT: ${FRONTEND_PORT}
     environment:
-      - VITE_API_TARGET=http://backend:5001
+      - FRONTEND_PORT=${FRONTEND_PORT}
+      - VITE_API_TARGET=http://backend:${BACKEND_PORT}
     ports:
-      - "5174:5174"
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
     volumes:
       - ./client:/app
       - /app/node_modules
