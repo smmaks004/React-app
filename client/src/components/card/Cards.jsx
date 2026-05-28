@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import './Cards.css';
 
-import CreateCard from '../card/CreateCard';
+// import CreateCard from '../card/CreateCard';
 
 
 
@@ -36,7 +36,7 @@ const Cards = () => {
         <div>
             <h2>Cards Page</h2>
 
-            <CreateCard />
+            {/* <CreateCard /> */}
             
             <ul className="cards-list">
                 {cards.map((card) => (
