@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import CreateUser from './CreateUser';
 import CardsListForUser from '../card/CardsListForUser';
+import CreateCard from '../card/CreateCard';
 
 
 
@@ -19,6 +20,7 @@ const Users = () => {
     // States
     const [showModal, setShowModal] = useState(false);
     const [managingCardsUser, setManagingCardsUser] = useState(null); // State for managing cards
+    const [cardsReloadKey, setCardsReloadKey] = useState(0);
     const [managingZonesUser, setManagingZonesUser] = useState(null); // State for managing zones
     const [selectedZoneId, setSelectedZoneId] = useState('');
 
@@ -108,7 +110,6 @@ const Users = () => {
 
     const handleManageCards = (user) => {
         setManagingCardsUser(user);
-        fetchCards(user._id);
     };
 
     const handleManageZones = (user) => {
@@ -226,13 +227,18 @@ const Users = () => {
 
             {/* Modal for managing user's cards */}
             {managingCardsUser && (
-                
-                
-
-                    <CardsListForUser 
-                    managingCardsUser={managingCardsUser}
-                    setManagingCardsUser={setManagingCardsUser}
+                <div className="modal">
+                    {/* <h3>Manage Cards for {managingCardsUser.name}</h3> */}
+                    <CardsListForUser
+                        managingCardsUser={managingCardsUser}
+                        reloadKey={cardsReloadKey}
                     />
+                    <CreateCard
+                        managingCardsUser={managingCardsUser}
+                        setManagingCardsUser={setManagingCardsUser}
+                        onCardCreated={() => setCardsReloadKey((value) => value + 1)}
+                    />
+                </div>
 
             )}
 

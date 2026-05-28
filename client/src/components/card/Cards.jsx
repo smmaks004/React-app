@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 import './Cards.css';
 
+import CreateCard from '../card/CreateCard';
+
+
 
 const Cards = () => {
     const [cards, setCards] = useState([]);
@@ -33,6 +36,8 @@ const Cards = () => {
         <div>
             <h2>Cards Page</h2>
 
+            <CreateCard />
+            
             <ul className="cards-list">
                 {cards.map((card) => (
                     <li key={card._id}>
