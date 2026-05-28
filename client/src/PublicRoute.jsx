@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
 export default function PublicRoute({ children }) {
@@ -6,20 +6,35 @@ export default function PublicRoute({ children }) {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
     const checkAuth = async () => {
       try {
         const res = await fetch('/api/auth/status', {
           credentials: 'include',
+          signal: controller.signal,
         });
-        const data = await res.json();
-        setIsAuth(data.loggedIn);
-      } catch (err) {
+        if (!res.ok) {
           setIsAuth(false);
+          return;
+        }
+        const data = await res.json();
+        setIsAuth(Boolean(data.loggedIn));
+      } catch {
+        setIsAuth(false);
       } finally {
-          setAuthChecked(true);
+        clearTimeout(timeoutId);
+        setAuthChecked(true);
       }
     };
+
     checkAuth();
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, []);
 
   if (!authChecked) {
