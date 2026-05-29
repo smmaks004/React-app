@@ -5,7 +5,6 @@ const router = express.Router();
 
 
 
-
 router.post('/data/addAuthData', (req, res) => {
 	console.log('--- New Auth Data Received (Finger/Face/Card) ---');
 	console.log('Body:', req.body);
@@ -63,19 +62,5 @@ router.get('/data/getUsersSync', async (req, res) => {
 		return res.status(500).json({ error: 'Server error' });
 	}
 });
-
-
-// router.get('/batch/:deviceUid/:eventData', (req, res) => {
-// 	console.log(`\n--- SUCCESSFUL CARD SWIPE DETECTED ---`);
-// 	console.log(`Request URL   : ${req.originalUrl}`);
-// 	const [rawTimestamp, direction, statusCode, credentialId] = req.params.eventData.split(',');
-// 	console.log(`Card Number   : ${credentialId}`); 
-// 	console.log(`Direction     : ${direction === '1' ? 'IN' : 'OUT'}`);
-// 	console.log(`Status Code   : ${statusCode}`);
-// 	console.log(`Timestamp(UTC): ${rawTimestamp}\n`);
-// 	res.type('text/plain').send('ok');
-// });
-
-
 
 export default router;

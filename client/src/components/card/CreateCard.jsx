@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 
 
-const CreateCard = ({ managingCardsUser, setManagingCardsUser, onCardCreated }) => {
+const CreateCard = ({ onCardCreated }) => {
 
     // New values states
     const [newCardName, setNewCardName] = useState(''); // State for new card input
@@ -16,21 +16,15 @@ const CreateCard = ({ managingCardsUser, setManagingCardsUser, onCardCreated }) 
         setScanStatus('Requesting controller to wait for a scan...');
 
         try {
-            const resp = await fetch('/api/collector/scan', {
-                // method: 'POST',
-                // headers: { 'Content-Type': 'application/json' },
-                // body: JSON.stringify(body),
+            const resp = await fetch('/api/cards/trigger-scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({}),
             });
-
-
-
 
             const data = await resp.json();
 
-
-
-
-            if (resp.ok && data.success) {
+            if (resp.ok && data && data.success !== false) {
                 setScanStatus('Controller armed — tap the new card on the device now');
             } else {
                 setScanStatus(data.error || 'Failed to request scan');
@@ -54,7 +48,6 @@ const CreateCard = ({ managingCardsUser, setManagingCardsUser, onCardCreated }) 
                 },
                 body: JSON.stringify({
                     name: newCardName,
-                    userId: managingCardsUser._id,
                     cardHex: newCardHex
                 }),
             });

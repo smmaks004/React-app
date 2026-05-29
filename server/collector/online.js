@@ -5,13 +5,51 @@ import CardsService from '../services/CardsService.js';
 const router = express.Router();
 
 
-router.get('/online', (req, res) => {
+// router.get('/online', (req, res) => {
+//     console.log('--- /online received ---');
+//     console.log(req.url);
+//     const { mac, src, scanType, trsn } = req.query;
+
+//     console.log("Transaction data", trsn)
+// });
+
+router.get('/online', async (req, res) => {
     console.log('--- /online received ---');
     console.log(req.url);
     const { mac, src, scanType, trsn } = req.query;
 
-    console.log("Transaction data", trsn)
+    console.log("Transaction data", trsn);
+    return res.type('text/plain').send('ack=1'); 
+
+    // Force the response header type to plain text so the hardware parses it correctly
+    // res.type('text/plain');
+
+    // if (!trsn) {
+    //     return res.send('ack=0'); 
+    // }
+
+    // try {
+    //     const segments = trsn.split(',');
+    //     const parsedHex = segments[segments.length - 1]; 
+
+    //     const cardExists = await CardsService.getCardByHex(parsedHex);
+
+    //     if (cardExists) {
+    //         console.log(`Access Approved for Hex: ${parsedHex}`);
+    //         return res.send('ack=1'); // Will now be delivered cleanly as text/plain
+    //     } else {
+    //         console.log(`Access Rejected. Hex ${parsedHex} not found in database.`);
+    //         return res.send('ack=0'); 
+    //     }
+    // } catch (err) {
+    //     console.error('Error handling online verification check:', err);
+    //     res.send('ack=0');
+    // }
+
 });
+
+
+
 router.post('/data/collect', (req, res) => {
 	console.log('--- /collect received ---');
 	console.log('From IP:', req.ip);

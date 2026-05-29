@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import './Cards.css';
 
-// import CreateCard from '../card/CreateCard';
+import PendingCards from '../card/PendingCards';
 
 
 
@@ -26,6 +26,21 @@ const Cards = () => {
         }
     };
 
+    const deleteCard = async (cardId) => {
+        if (!window.confirm('Are you sure you want to delete this card?')) return;
+
+        try {
+            const res = await fetch(`/api/cards/delete/${cardId}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Failed to delete card');
+            
+            await fetchCards();
+        } catch (err) {
+            console.error('Error deleting card:', err);
+            // alert('Error deleting card: ' + err.message);
+        }
+    };
+
+
     useEffect(() => {
         fetchCards();
     }, []);
@@ -36,7 +51,7 @@ const Cards = () => {
         <div>
             <h2>Cards Page</h2>
 
-            {/* <CreateCard /> */}
+            {/* <PendingCards /> */}
             
             <ul className="cards-list">
                 {cards.map((card) => (
@@ -46,6 +61,7 @@ const Cards = () => {
                         card.userId ? `${card.userId.name} 
                         ${card.userId.surname} 
                         (${card.userId.email})` : 'No user'}
+                        <button onClick={() => deleteCard(card._id)}>Delete</button>
                     </li>
                 ))}
             </ul>

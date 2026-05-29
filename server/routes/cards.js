@@ -88,4 +88,49 @@ router.get('/user/:userId', async (req, res) => {
     }
 });
 
+
+
+router.delete('/delete/:cardId', async (req, res) => {
+    const { cardId } = req.params;
+    console.log('(Console) Delete request for cardId:', cardId);
+    try {
+        const cardToDelete = await CardsServices.getCardById(cardId);
+        if (!cardToDelete) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        activeDeleteSession = {
+            isDeleting: true,
+            cardHex: cardToDelete.cardHex,
+            status: 'pending_device_pickup'
+        };
+
+        const deletedCard = await CardsServices.deleteCard(cardId);
+        if (!deletedCard) {
+            return res.status(404).json({ message: 'Card not found' });
+        }
+
+        res.json({ message: 'Card deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
+router.post('/trigger-scan', async (req, res) => {
+    const { userId } = req.body; 
+
+    // Set the global variable to indicate someone is waiting to scan
+    activeScanSession = {
+        isScanning: true,
+        userId: userId,
+        status: 'pending_device_pickup'
+    };
+
+    res.json({ message: 'Server is ready. Please swipe the card on the controller now.' });
+
+});
+
+
+
 export default router;

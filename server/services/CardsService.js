@@ -22,7 +22,12 @@ class CardsService {
         return card;
     }
     
+    static async getCardById(cardId) {
+        const card = await Card.findById(cardId);
+        return card;
+    }
     
+
     // CREATE
     static async createCard({ name, userId, cardHex, type }) {
         const card = await Card.create({ name, userId, cardHex, type });
@@ -31,6 +36,12 @@ class CardsService {
         return card;
     }   
 
+    // DELETE
+    static async deleteCard(cardId) {
+        const deleted = await Card.findByIdAndDelete(cardId);
+        
+        return deleted;
+    }
 }
 
 export default CardsService;
