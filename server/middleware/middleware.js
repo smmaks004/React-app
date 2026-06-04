@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
-import { User } from '../models/user.js';
-import { Token } from '../models/token.js';
+// import { User } from '../models/user.js';
+// import { Token } from '../models/token.js';
 
 import UserService from '../services/UsersService.js';
 import TokenService from '../services/TokensService.js';

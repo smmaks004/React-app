@@ -18,6 +18,11 @@ class CommandsService {
         return command;
     }
 
+    static async getCommandByStatus({ status }) {
+        const command = await Command.findOne({ status: 'sent' }).sort({ createdAt: 1 });
+        return command;
+    }
+
     static async getAllNotSendedCommands(){
         const commands = await Command.find({ sent: false, status: 'pending' }).sort({ createdAt: 1 });
         return commands;
@@ -44,6 +49,11 @@ class CommandsService {
         return await Command.create({ action, data, status: 'pending' });
     }
 
+    static async createCompletedCommand({ action, data }) {
+        return await Command.create({ action, data, status: 'completed' });
+    }
+    
+
     // DELETE
     static async deleteCommandById({ id }) {
         const command = await Command.findByIdAndDelete({ _id: id });
@@ -55,6 +65,18 @@ class CommandsService {
     static async updateCommandStatus({ id, status, data }) {
         const command = await Command.findByIdAndUpdate( 
             { _id: id }, { status, data }, { new: true });
+        return command;
+    }
+    
+    static async updateCommandToCompletedById({ commandId, data }) {
+        const command = await Command.findByIdAndUpdate(
+            commandId,
+            {
+                data: data,
+                status: 'completed',
+            },
+            { new: true }
+        );
         return command;
     }
 
