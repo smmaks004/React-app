@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import CardsServices from '../services/CardsService.js';
 import UsersServices from '../services/UsersService.js';
+import CommandsService from '../services/CommandsService.js';
 
 // import { Card } from '../models/card.js';
 
@@ -35,8 +36,8 @@ router.get('/', async (req, res) => {
 router.post('/create', async (req, res) => {
     const { name, userId , cardHex, type} = req.body;
 
-    if (!name || !userId) {
-        return res.status(400).json({ message: 'Card name and userId are required' });
+    if (!name) {
+        return res.status(400).json({ message: 'Card name is required' });
     }
 
     try {
@@ -99,38 +100,97 @@ router.delete('/delete/:cardId', async (req, res) => {
             return res.status(404).json({ message: 'Card not found' });
         }
 
-        activeDeleteSession = {
-            isDeleting: true,
-            cardHex: cardToDelete.cardHex,
-            status: 'pending_device_pickup'
-        };
+        // Create delete command (action 9) to send to device
+        const command = await CommandsService.createCommand({ action: 9, data: { cardHex: cardToDelete.cardHex } });
 
-        const deletedCard = await CardsServices.deleteCard(cardId);
-        if (!deletedCard) {
-            return res.status(404).json({ message: 'Card not found' });
-        }
+        const deletedCard = await CardsServices.deleteCardById({ cardId });
 
-        res.json({ message: 'Card deleted successfully' });
+        res.json({ message: 'Delete command queued', commandId: command._id, data: deletedCard });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
 
+
+
+
 router.post('/trigger-scan', async (req, res) => {
-    const { userId } = req.body; 
+    const command = await CommandsService.createCommand({ action: 201, data: null }); // 201 = ScanCard
 
-    // Set the global variable to indicate someone is waiting to scan
-    activeScanSession = {
-        isScanning: true,
-        userId: userId,
-        status: 'pending_device_pickup'
-    };
-
-    res.json({ message: 'Server is ready. Please swipe the card on the controller now.' });
+    res.json({
+        message: 'Server is ready. Please swipe the card on the controller now.',
+        commandId: command._id,
+    });
 
 });
 
+
+router.post('/trigger-approval', async (req, res) => {
+    const { commandId, cardHex, userId } = req.body;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, error: 'User ID is required' });
+    }
+
+    try {
+        let cardHexFromCommand = null;
+
+        if (commandId) {
+            const sourceCommand = await CommandsService.getCommandById({ id: commandId });
+            cardHexFromCommand = sourceCommand?.data?.cardHex || null;
+
+            if (!sourceCommand) {
+                return res.status(404).json({ success: false, error: 'Source command not found' });
+            }
+        }
+
+        const resolvedCardHex = cardHexFromCommand || cardHex;
+        if (!resolvedCardHex) {
+            return res.status(400).json({ success: false, error: 'Card Hex or commandId is required' });
+        }
+
+        // Normalize cardHex to start with 0x
+        const normalizedCardHex = resolvedCardHex.startsWith('0x') ? resolvedCardHex : `0x${resolvedCardHex}`;
+
+        // Check if card already exists
+        const existingCard = await CardsServices.getCardByHex(normalizedCardHex);
+        if (existingCard) {
+            return res.status(400).json({ success: false, error: 'Card already exists in database' });
+        }
+
+        // Create the card directly in database
+        const name = `Card ${normalizedCardHex.slice(-6)}`;
+        const card = await CardsServices.createCard({ 
+            name, 
+            userId, 
+            cardHex: normalizedCardHex, 
+            type: 'Card' 
+        });
+
+        console.log(`Created card ${card._id} (${normalizedCardHex}) for user ${userId}`);
+        // Also queue a createCard command for the controller so it receives the new card
+        try {
+            const command = await CommandsService.createCommand({ action: 1, data: { cardHex: normalizedCardHex, userId } }); // 1 = createCard
+
+            if (commandId) {
+                await CommandsService.updateCommandStatus({
+                    id: commandId,
+                    status: 'approved',
+                    data: { ...(await CommandsService.getCommandById({ id: commandId }))?.data, approvedForUserId: userId }
+                });
+            }
+
+            console.log('Queued createCard command for controller', command._id);
+        } catch (err) {
+            console.error('Error queuing createCard command:', err);
+        }
+        res.json({ success: true, message: 'Card created successfully', data: card });
+    } catch (err) {
+        console.error('Error creating card:', err);
+        res.status(500).json({ success: false, error: 'Server error while creating card' });
+    }
+});
 
 
 export default router;

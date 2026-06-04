@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import CreateUser from './CreateUser';
-import CardsListForUser from '../card/CardsListForUser';
-import CreateCard from '../card/CreateCard';
-
 
 
 import './Users.css';
@@ -19,8 +16,6 @@ const Users = () => {
 
     // States
     const [showModal, setShowModal] = useState(false);
-    const [managingCardsUser, setManagingCardsUser] = useState(null); // State for managing cards
-    const [cardsReloadKey, setCardsReloadKey] = useState(0);
     const [managingZonesUser, setManagingZonesUser] = useState(null); // State for managing zones
     const [selectedZoneId, setSelectedZoneId] = useState('');
 
@@ -106,10 +101,6 @@ const Users = () => {
     const handleEdit = (user) => {
         setEditingUser(user);
         setShowModal(true);
-    };
-
-    const handleManageCards = (user) => {
-        setManagingCardsUser(user);
     };
 
     const handleManageZones = (user) => {
@@ -216,34 +207,11 @@ const Users = () => {
                     <li key={user._id}>
                         {user.name} {user.surname} |  <strong>Email:</strong> {user.email}
                         <button onClick={() => handleEdit(user)}>Edit</button>
-                        <button onClick={() => handleManageCards(user)}>Manage Cards</button>
                         <button onClick={() => handleManageZones(user)}>+ Add Zone</button>
-
                         <button onClick={() => handleDelete(user._id)}>Delete</button>
                     </li>
                 ))}
             </ul>
-
-
-            {/* Modal for managing user's cards */}
-            {managingCardsUser && (
-                <div className="modal">
-                    {/* <h3>Manage Cards for {managingCardsUser.name}</h3> */}
-                    <CardsListForUser
-                        managingCardsUser={managingCardsUser}
-                        reloadKey={cardsReloadKey}
-                    />
-                    <CreateCard
-                        managingCardsUser={managingCardsUser}
-                        setManagingCardsUser={setManagingCardsUser}
-                        onCardCreated={() => setCardsReloadKey((value) => value + 1)}
-                    />
-                </div>
-
-            )}
-
-
-
 
 
             {managingZonesUser && (

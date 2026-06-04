@@ -23,17 +23,4 @@ router
   .use(batchRouter)
   .use(keepaliveRouter);
 
-// Global state to track active scan session
-global.activeScanSession = {
-  isScanning: false,
-  userId: null,
-  status: 'idle' // tracks 'idle', 'pending_device_pickup', or 'sent_to_device'
-};
-
-global.activeDeleteSession = {
-    isDeleting: false,
-    cardHex: null,
-    status: 'idle' // tracks 'idle', 'pending_device_pickup', 'sent_to_device'
-};
-
 export default router;

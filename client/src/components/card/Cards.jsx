@@ -3,7 +3,7 @@ import Header from '../Header';
 import { useNavigate } from 'react-router-dom';
 
 import './Cards.css';
-
+import CreateCard from './CreateCard';
 import PendingCards from '../card/PendingCards';
 
 
@@ -51,8 +51,12 @@ const Cards = () => {
         <div>
             <h2>Cards Page</h2>
 
-            {/* <PendingCards /> */}
+            {/* Create Card Section */}
+            <CreateCard onCardCreated={fetchCards} />
+
+            <PendingCards onCardApproved={fetchCards} />
             
+            <h3>All Cards</h3>
             <ul className="cards-list">
                 {cards.map((card) => (
                     <li key={card._id}>

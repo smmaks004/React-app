@@ -29,7 +29,7 @@ class CardsService {
     
 
     // CREATE
-    static async createCard({ name, userId, cardHex, type }) {
+    static async createCard({ name, userId = null, cardHex, type }) {
         const card = await Card.create({ name, userId, cardHex, type });
         await card.save();
         
@@ -37,8 +37,15 @@ class CardsService {
     }   
 
     // DELETE
-    static async deleteCard(cardId) {
-        const deleted = await Card.findByIdAndDelete(cardId);
+    static async deleteCardById({ cardId }) {
+                const deleted = await Card.findByIdAndDelete({ _id: cardId });
+
+        
+        return deleted;
+    }
+
+    static async deleteCardByHex({ cardHex }) {
+        const deleted = await Card.findOneAndDelete({ cardHex });
         
         return deleted;
     }

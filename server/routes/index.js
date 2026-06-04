@@ -8,6 +8,7 @@ import companiesRouter from './companies.js';
 import cardsRouter from './cards.js';
 import zonesRouter from './zones.js';
 import picturesRouter from './pictures.js';
+import commandsRouter from './commands.js';
 
 const router = express.Router();
 
@@ -22,6 +23,8 @@ router.use('/companies', authenticateToken, companiesRouter); // was without aut
 router.use('/cards', authenticateToken, cardsRouter);
 router.use('/zones', authenticateToken, zonesRouter);
 router.use('/pictures', authenticateToken, picturesRouter);
+router.use('/commands', authenticateToken, commandsRouter);
+
 
 
 

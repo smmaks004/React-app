@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 
 
 
-const CreateCard = ({ onCardCreated }) => {
+const CreateCard = ({ onCardCreated = () => {} }) => {
 
     // New values states
-    const [newCardName, setNewCardName] = useState(''); // State for new card input
-    const [newCardHex, setNewCardHex] = useState(''); // State for new card hex input
+    // const [newCardName, setNewCardName] = useState(''); // State for new card input
+    // const [newCardHex, setNewCardHex] = useState(''); // State for new card hex input
     const [scanStatus, setScanStatus] = useState('');
 
 
@@ -36,45 +36,46 @@ const CreateCard = ({ onCardCreated }) => {
     };
 
 
-    // Handlers
-    const handleAddCard = async () => {
-        if (!newCardName.trim() || !newCardHex.trim()) return;
+    // // Handlers
+    // const handleAddCard = async () => {
+    //     if (!newCardName.trim() || !newCardHex.trim()) return;
 
-        try {
-            const response = await fetch('/api/cards/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: newCardName,
-                    cardHex: newCardHex
-                }),
-            });
+    //     try {
+    //         const response = await fetch('/api/cards/create', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 name: newCardName,
+    //                 cardHex: newCardHex
+    //             }),
+    //         });
 
-            if (response.ok) {
-                setNewCardName('');
-                setNewCardHex('');
-                if (onCardCreated) {
-                    onCardCreated();
-                }
-            } else {
-                console.error('Failed to add card');
-            }
-        } catch (err) {
-            console.error('Error:', err);
-        }
-    };
+    //         if (response.ok) {
+    //             setNewCardName('');
+    //             setNewCardHex('');
+    //             if (onCardCreated) {
+    //                 onCardCreated();
+    //             }
+    //         } else {
+    //             console.error('Failed to add card');
+    //         }
+    //     } catch (err) {
+    //         console.error('Error:', err);
+    //     }
+    // };
 
     return (
         <div>
-            <label>Create New Card Manually</label>
+            {/* <label>Create New Card Manually</label>
             <div className='manualCreation'>
-                
+                <label>Card Name:</label>
                 <input
                     type="text"
                     value={newCardName}
                     onChange={(e) => setNewCardName(e.target.value)}
+                    placeholder="Card Name"
                 />
                 <label>Card Hex:</label>
                 <input
@@ -84,8 +85,7 @@ const CreateCard = ({ onCardCreated }) => {
                     placeholder="0xA1B2xC3"
                 />
                 <button onClick={handleAddCard}>Add Card</button>
-                <button onClick={() => setManagingCardsUser(null)}>Close</button>
-            </div>
+            </div> */}
             
             
             <label>Create through scanning</label>
