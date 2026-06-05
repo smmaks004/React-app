@@ -14,7 +14,7 @@ router.get('/keepalive', async (req, res) => {
 	console.log('--- keepalive Received ---');
     const { cmd } = req.query;
 
-    // console.log("CMD:", cmd);
+    // if(cmd) return res.type('text/plain').send('ack=1'); 
 
     try {
         const command = await CommandsService.claimNextPendingCommand();

@@ -11,7 +11,7 @@ router.get('/data/getControllers', (req, res) => {
 			title: 'Suprema BioEntry W2 200.120',
 			object_id: '1',
 			// lastLogId: '12354', // Possible caused problems with reciing controller info (if too high)
-			lastLogId: '1',
+			lastLogId: '13449',
 			direction: '0',
 			masterCardHex: null,
 		},

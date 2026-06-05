@@ -9,6 +9,7 @@ import Users from './users/Users';
 import Companies from './company/Companies';
 import Card from './card/Cards';
 import Zone from './zone/Zone';
+import Finger from './finger/Fingers';
 
 
 const MainPage = () => {
@@ -53,6 +54,14 @@ const MainPage = () => {
             <div>
               <h2>Zone Creation Tab</h2>
               <Zone />
+            </div>
+          )}
+
+          {/* FInger page */}
+          {activeTab === 'FingerTable' && (
+            <div>
+              <h2>Finger Creation Tab</h2>
+              <Finger />
             </div>
           )}
         </div>

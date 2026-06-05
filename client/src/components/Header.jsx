@@ -85,6 +85,12 @@ const Header = ({ onTabChange }) => {
                 Zones Page
             </button>
 
+            <button
+                onClick={() => onTabChange && onTabChange('FingerTable')}
+                style={{ padding: '8px 16px' }}>
+                Fingers Page
+            </button>
+
             <div ref={menuRef} style={{ position: 'relative' }}>
                 <button
                     onClick={() => setIsMenuOpen((prev) => !prev)}

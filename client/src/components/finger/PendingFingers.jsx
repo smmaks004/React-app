@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Header from '../Header';
 import { useNavigate } from 'react-router-dom';
 
-import './Cards.css';
 
-
-const PendingCards = ({ onCardApproved }) => {
+const PendingFingers = ({ onFingerApproved }) => {
 
     const [commands, setCommands] = useState([]);
     const [error, setError] = useState(null);
@@ -15,7 +13,7 @@ const PendingCards = ({ onCardApproved }) => {
 
     const fetchCommands = async () => {
         try {
-            const res = await fetch('/api/commands/cards');
+            const res = await fetch('/api/commands/fingers');
             if (!res.ok) throw new Error('Failed to fetch commands');
 
             const { data } = await res.json();
@@ -38,9 +36,9 @@ const PendingCards = ({ onCardApproved }) => {
         }
     };
 
-    const approveCard = async (commandId, selectedUserId) => {
+    const approveFinger = async (commandId, selectedUserId) => {
         try {
-            const res = await fetch('/api/cards/trigger-approval', {
+            const res = await fetch('/api/fingers/trigger-approval', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ commandId, userId: selectedUserId }),
@@ -49,16 +47,16 @@ const PendingCards = ({ onCardApproved }) => {
             const data = await res.json();
 
             if (res.ok && data && data.success) {
-                alert('Card approved successfully!');
+                alert('Finger approved successfully!');
                 fetchCommands(); // Refresh the list after approval
-                if (onCardApproved) onCardApproved();
+                if (onFingerApproved) onFingerApproved();
                 setSelectedUsersByCommand((prev) => ({ ...prev, [commandId]: '' }));
             } else {
-                alert(data.error || 'Failed to approve card');
+                alert(data.error || 'Failed to approve finger');
             }
         } catch (err) {
             console.error(err);
-            alert('Network error while approving card');
+            alert('Network error while approving finger');
         }
     };
 
@@ -71,12 +69,11 @@ const PendingCards = ({ onCardApproved }) => {
 
     return (
         <div>
-            <h3>Pending Cards</h3>
-            <ul className="cards-list">
+            <h3>Pending Fingers</h3>
+            <ul className="fingers-list">
                 {commands.map((command) => (
                     <li key={command._id}> 
-                        <strong>Card Mac:</strong> {command.data.mac || 'N/A'} | 
-                        <strong>Card Hex:</strong> {command.data.cardHex || 'N/A'}
+                        <strong>Finger templateData:</strong> {command.data.templateData || 'N/A'}
                         <select
                             value={selectedUsersByCommand[command._id] || ''}
                             onChange={(e) => {
@@ -94,7 +91,7 @@ const PendingCards = ({ onCardApproved }) => {
                         </select>
 
                         <button
-                            onClick={() => approveCard(
+                            onClick={() => approveFinger(
                                 command._id, 
                                 selectedUsersByCommand[command._id]
                             )}
@@ -111,4 +108,4 @@ const PendingCards = ({ onCardApproved }) => {
 
 }
 
-export default PendingCards;
+export default PendingFingers;

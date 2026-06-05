@@ -9,6 +9,7 @@ import cardsRouter from './cards.js';
 import zonesRouter from './zones.js';
 import picturesRouter from './pictures.js';
 import commandsRouter from './commands.js';
+import fingersRouter from './fingers.js';
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.use('/cards', authenticateToken, cardsRouter);
 router.use('/zones', authenticateToken, zonesRouter);
 router.use('/pictures', authenticateToken, picturesRouter);
 router.use('/commands', authenticateToken, commandsRouter);
+router.use('/fingers', authenticateToken, fingersRouter);
 
 
 

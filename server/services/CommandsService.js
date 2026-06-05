@@ -13,6 +13,12 @@ class CommandsService {
         return commands;
     }
 
+    static async getAllCommandsForFingers(){
+        // const commands = await Command.find({ 'data.scanType': 2, status: 'completed' });
+        const commands = await Command.find({ 'data.scanType': 2});
+        return commands;
+    }
+
     static async getCommandById({ id }) {
         const command = await Command.findById(id);
         return command;

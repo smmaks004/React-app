@@ -14,6 +14,7 @@ router.get('/online', async (req, res) => {
 
     console.log("Transaction data", trsn);
     
+    
     return res.type('text/plain').send('ack=1'); 
 
 
@@ -38,11 +39,12 @@ router.post('/data/addAuthData', async (req, res) => {
     console.log('--- Received New Auth Data ---');
     console.log(req.body);
 
-    const { mac, cardHex,scanType, userId, templateData } = req.body;
+    const { mac, cardHex, scanType, userId, templateData } = req.body;
     
     try {
         // Card
         if (scanType === 1) {
+            console.log('scanType is Card. Processing card data');
             const normalizedCardHex = cardHex
                 ? (cardHex.startsWith('0x') ? cardHex : `0x${cardHex}`)
                 : null;
@@ -51,8 +53,8 @@ router.post('/data/addAuthData', async (req, res) => {
                 mac: mac || null,
                 cardHex: normalizedCardHex,
                 scanType: Number(scanType) || null,
-                userId: userId || null,
-                templateData: templateData || null,
+                userId: userId || null//,
+                // templateData: templateData || null,
             };
             
             try {
@@ -117,10 +119,65 @@ router.post('/data/addAuthData', async (req, res) => {
 
         }
 
+
         // Fingerprint
         else if (scanType === 2) {
+            console.log('scanType is Fingerprint. Processing fingerprint data');
+
+            const commandData = {
+                mac: mac || null,
+                scanType: Number(scanType) || null,
+                userId: userId || null,
+                templateData: templateData || null,
+            };
+
+            try {
+                // const pendingCommand = await Command.findOne({ status: 'sent' }).sort({ createdAt: 1 });
+                const pendingCommand = CommandsService.getCommandByStatus({ status: 'sent' });
+
+                console.log('Will pending start?');
+                if (pendingCommand?._id) {
+                    const action = pendingCommand.action || 200;
+
+                    const mergedData = {
+                        ...(pendingCommand.data || {}),
+                        ...commandData,
+                    };
+
+                    const updatedCommand= await CommandsService.updateCommandToCompletedById(
+                        {
+                            commandId: pendingCommand._id,
+                            data: mergedData
+                        }
+                    );
+
+
+
+                    // const updatedCommand = await Command.updateCommandbyId({id: pendingCommandId, status: 'completed' , data: dataCommand });
+
+                    console.log(`Updated pending command ${pendingCommand._id} (action=${action})`, mergedData);
+                } else {
+                    const createdCommand = await CommandsService.createCompletedCommand(
+                        { 
+                            action: 200,  // default to ScanFinger
+                            data: commandData 
+                        }
+                    );
+
+                    console.log(`Created fallback auth command ${createdCommand._id}`, commandData);
+                }
+
+                return res.json({ success: true });
+            } catch (err) {
+                console.error('Error handling addAuthData:', err);
+                return res.status(500).json({ success: false, error: err.message });
+            }
+            
+
             console.log(`Saving new FINGERPRINT template for User ${userId}`);
         }
+
+
 
         // Face
         else if (scanType === 3) {
