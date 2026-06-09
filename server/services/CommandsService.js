@@ -9,7 +9,8 @@ class CommandsService {
     }
 
     static async getAllCommandsForCards(){
-        const commands = await Command.find({ 'data.scanType': 1, status: 'completed' });
+        // const commands = await Command.find({ 'data.scanType': 1, status: 'completed' });
+        const commands = await Command.find({ 'data.scanType': 1 });
         return commands;
     }
 
@@ -24,25 +25,32 @@ class CommandsService {
         return command;
     }
 
-    static async getCommandByStatus({ status }) {
-        const command = await Command.findOne({ status: 'sent' }).sort({ createdAt: 1 });
+    
+    static async getOnePendingCommand() {
+        const command = await Command.findOne({ sent: false }).sort({ createdAt: 1 }); // oldest to newest
         return command;
     }
+
+    static async getCommandByStatus({ status }) {
+        const command = await Command.findOne({ sent: status }).sort({ createdAt: 1 }); // oldest to newest
+        return command;
+    }
+
 
     static async getAllNotSendedCommands(){
         const commands = await Command.find({ sent: false, status: 'pending' }).sort({ createdAt: 1 });
         return commands;
     }
 
-    static async claimNextPendingCommand() {
-        const command = await Command.findOneAndUpdate(
-            { sent: false, status: 'pending' },
-            { sent: true, status: 'completed' }, ////
-            { new: true, sort: { createdAt: 1 } }
-        );
+    // static async claimNextPendingCommand() {
+    //     const command = await Command.findOneAndUpdate(
+    //         { sent: false, status: 'pending' },
+    //         // { sent: true, status: 'completed' }, ////
+    //         { new: true, sort: { createdAt: 1 } }
+    //     );
 
-        return command;
-    }
+    //     return command;
+    // }
 
     // static async getOldestSentCommand() {
     //     const command = await Command.findOne({ status: 'completed' }).sort({ createdAt: 1 });
@@ -55,9 +63,9 @@ class CommandsService {
         return await Command.create({ action, data, status: 'pending' });
     }
 
-    static async createCompletedCommand({ action, data }) {
-        return await Command.create({ action, data, status: 'completed' });
-    }
+    // static async createCompletedCommand({ action, data }) {
+    //     return await Command.create({ action, data, status: 'completed' });
+    // }
     
 
     // DELETE
@@ -70,21 +78,30 @@ class CommandsService {
     // UPDATE
     static async updateCommandStatus({ id, status, data }) {
         const command = await Command.findByIdAndUpdate( 
-            { _id: id }, { status, data }, { new: true });
+            // { _id: id }, { status, data }, { new: true });
+            { _id: id }, { data }, { new: true });
         return command;
     }
     
-    static async updateCommandToCompletedById({ commandId, data }) {
-        const command = await Command.findByIdAndUpdate(
-            commandId,
-            {
-                data: data,
-                status: 'completed',
-            },
-            { new: true }
-        );
-        return command;
-    }
+    // static async updateCommandToCompletedById({ commandId, data }) {
+    //     const command = await Command.findByIdAndUpdate(
+    //         commandId,
+    //         {
+    //             data: data,
+    //             status: 'completed',
+    //         },
+    //         { new: true }
+    //     );
+    //     return command;
+    // }
+
+
+
+
+
+
+
+
 
 
 }

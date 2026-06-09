@@ -14,10 +14,12 @@ router.get('/keepalive', async (req, res) => {
 	console.log('--- keepalive Received ---');
     const { cmd } = req.query;
 
-    // if(cmd) return res.type('text/plain').send('ack=1'); 
+    if(cmd) return res.type('text/plain').send('ack=1'); 
 
+    
     try {
-        const command = await CommandsService.claimNextPendingCommand();
+        // const command = await CommandsService.claimNextPendingCommand();
+        const command = await CommandsService.getOnePendingCommand(); 
 
         if (!command) {
             return res.type('text/plain').send('ack=1');
@@ -27,8 +29,19 @@ router.get('/keepalive', async (req, res) => {
             action: command.action,
             data: command.data || {}
         };
+        
+        // !!! 
+        // Think about how move deletion logic and etc here, not in cards and commands files
+        // if(command.actoin === 1) {}
+        // if ....
 
         const commandString = JSON.stringify(payload);
+
+
+        command.sent = true;
+        await command.save();
+
+
         console.log(`Sending command ${command._id} to controller: cmd=${commandString}`);
 
         return res.type('text/plain').send(`cmd=${commandString}`);

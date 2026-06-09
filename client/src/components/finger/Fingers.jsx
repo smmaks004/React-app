@@ -59,7 +59,7 @@ const Fingers = () => {
             <ul className="fingers-list">
                 {fingers.map((finger) => (
                     <li key={finger._id}>
-                        {/* <strong>Finger Name: </strong> {finger.name} <strong>Hex:</strong> {finger.fingerHex}  |  */}
+                        <strong>Fingerprint code: </strong> {finger.templateData.slice(0, 10)} | 
                         <strong>User:</strong> {
                         finger.userId ? `${finger.userId.name} 
                         ${finger.userId.surname} 

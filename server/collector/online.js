@@ -1,7 +1,10 @@
 import express from 'express';
 
 import CardsService from '../services/CardsService.js';
+import FingersService from '../services/FingersService.js';
 import CommandsService from '../services/CommandsService.js';
+
+
 // import { Command } from '../models/command.js';
 
 const router = express.Router();
@@ -13,6 +16,7 @@ router.get('/online', async (req, res) => {
     const { mac, src, scanType, trsn } = req.query;
 
     console.log("Transaction data", trsn);
+    
     
     
     return res.type('text/plain').send('ack=1'); 
@@ -59,56 +63,61 @@ router.post('/data/addAuthData', async (req, res) => {
             
             try {
                 // const pendingCommand = await Command.findOne({ status: 'sent' }).sort({ createdAt: 1 });
-                const pendingCommand = CommandsService.getCommandByStatus({ status: 'sent' });
+                // const pendingCommand = await CommandsService.getCommandByStatus({ status: 'false' });
+                const createdCard = await CardsService.createCard({ userId, cardHex: normalizedCardHex, type: 'Card' });
 
-                console.log('Will pending start?');
-                if (pendingCommand?._id) {
-                    const action = pendingCommand.action || 201;
-
-                    const mergedData = {
-                        ...(pendingCommand.data || {}),
-                        ...commandData,
-                    };
-
-                    // await Command.findByIdAndUpdate(
-                    //     pendingCommand._id,
-                    //     {
-                    //         data: mergedData,
-                    //         status: 'completed',
-                    //     },
-                    //     { new: true }
-                    // );
-
-                    const updatedCommand= await CommandsService.updateCommandToCompletedById(
-                        {
-                            commandId: pendingCommand._id,
-                            data: mergedData
-                        }
-                    );
+                console.log('Will pending start? (Card)');
+                
 
 
 
-                    // const updatedCommand = await Command.updateCommandbyId({id: pendingCommandId, status: 'completed' , data: dataCommand });
+                // if (pendingCommand?._id) {
+                //     // const action = pendingCommand.action || 201;
 
-                    console.log(`Updated pending command ${pendingCommand._id} (action=${action})`, mergedData);
-                } else {
-                    // No pending command: create a completed command record so the scan is preserved
-                    // const actionFallback = 201; // default to ScanCard
-                    // const createdCommand = await Command.create({
-                    //     action: actionFallback,
-                    //     data: commandData,
-                    //     status: 'completed',
-                    // });
+                //     // const mergedData = {
+                //     //     ...(pendingCommand.data || {}),
+                //     //     ...commandData,
+                //     // };
 
-                    const createdCommand = await CommandsService.createCompletedCommand(
-                        { 
-                            action: 201,  // default to ScanCard
-                            data: commandData 
-                        }
-                    );
+                //     // await Command.findByIdAndUpdate(
+                //     //     pendingCommand._id,
+                //     //     {
+                //     //         data: mergedData,
+                //     //         status: 'completed',
+                //     //     },
+                //     //     { new: true }
+                //     // );
 
-                    console.log(`Created fallback auth command ${createdCommand._id}`, commandData);
-                }
+                //     // const updatedCommand= await CommandsService.updateCommandToCompletedById(
+                //     //     {
+                //     //         commandId: pendingCommand._id,
+                //     //         data: mergedData
+                //     //     }
+                //     // );
+
+
+
+                //     // const updatedCommand = await Command.updateCommandbyId({id: pendingCommandId, status: 'completed' , data: dataCommand });
+
+                //     // console.log(`Updated pending command ${pendingCommand._id} (action=${action})`, mergedData);
+                // } else {
+                //     // No pending command: create a completed command record so the scan is preserved
+                //     // const actionFallback = 201; // default to ScanCard
+                //     // const createdCommand = await Command.create({
+                //     //     action: actionFallback,
+                //     //     data: commandData,
+                //     //     status: 'completed',
+                //     // });
+
+                //     const createdCommand = await CommandsService.createCompletedCommand(
+                //         { 
+                //             action: 201,  // default to ScanCard
+                //             data: commandData 
+                //         }
+                //     );
+
+                //     console.log(`Created fallback auth command ${createdCommand._id}`, commandData);
+                // }
 
                 return res.json({ success: true });
             } catch (err) {
@@ -133,39 +142,45 @@ router.post('/data/addAuthData', async (req, res) => {
 
             try {
                 // const pendingCommand = await Command.findOne({ status: 'sent' }).sort({ createdAt: 1 });
-                const pendingCommand = CommandsService.getCommandByStatus({ status: 'sent' });
+                const createdFinger = await FingersService.createFinger({ userId, templateData, type: 'Finger' });
 
-                console.log('Will pending start?');
-                if (pendingCommand?._id) {
-                    const action = pendingCommand.action || 200;
+                
 
-                    const mergedData = {
-                        ...(pendingCommand.data || {}),
-                        ...commandData,
-                    };
-
-                    const updatedCommand= await CommandsService.updateCommandToCompletedById(
-                        {
-                            commandId: pendingCommand._id,
-                            data: mergedData
-                        }
-                    );
+                console.log('Will pending start? (Finger)');
 
 
 
-                    // const updatedCommand = await Command.updateCommandbyId({id: pendingCommandId, status: 'completed' , data: dataCommand });
 
-                    console.log(`Updated pending command ${pendingCommand._id} (action=${action})`, mergedData);
-                } else {
-                    const createdCommand = await CommandsService.createCompletedCommand(
-                        { 
-                            action: 200,  // default to ScanFinger
-                            data: commandData 
-                        }
-                    );
+                // if (pendingCommand?._id) {
+                //     const action = pendingCommand.action || 200;
 
-                    console.log(`Created fallback auth command ${createdCommand._id}`, commandData);
-                }
+                //     const mergedData = {
+                //         ...(pendingCommand.data || {}),
+                //         ...commandData,
+                //     };
+
+                //     // const updatedCommand= await CommandsService.updateCommandToCompletedById(
+                //     //     {
+                //     //         commandId: pendingCommand._id,
+                //     //         data: mergedData
+                //     //     }
+                //     // );
+
+
+
+                //     // const updatedCommand = await Command.updateCommandbyId({id: pendingCommandId, status: 'completed' , data: dataCommand });
+
+                //     // console.log(`Updated pending command ${pendingCommand._id} (action=${action})`, mergedData);
+                // } else {
+                //     // const createdCommand = await CommandsService.createCompletedCommand(
+                //     //     { 
+                //     //         action: 200,  // default to ScanFinger
+                //     //         data: commandData 
+                //     //     }
+                //     // );
+
+                //     console.log(`Created fallback auth command ${createdCommand._id}`, commandData);
+                // }
 
                 return res.json({ success: true });
             } catch (err) {
